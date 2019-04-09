@@ -10,7 +10,13 @@ namespace shatteredcake
     {
         static void Main(string[] args)
         {
-            int Width = Int32.Parse(Console.ReadLine());
+
+            // My solution for this was to take the width that we know
+            // Add together all the area of the little pieces
+            // Then divide the total area by the width to get the length
+
+
+            int Width = Int32.Parse(Console.ReadLine()); 
             int num = Int32.Parse(Console.ReadLine());
 
 
