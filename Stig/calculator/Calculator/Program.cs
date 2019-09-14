@@ -8,7 +8,7 @@ namespace Calculator
     public class lexeme
     {
         public TokenType Token;
-        public int Value;
+        public float Value;
         public char Operator;
     }
     class Program
@@ -63,7 +63,7 @@ namespace Calculator
                     //if a operator with higher power is queue, add that one to sorted
                     for (int i = operators.Count - 1; i >= 0; i--)
                     {
-                        if (operators[i].Value > modifier)
+                        if (operators[i].Value >= modifier)
                         {
                             sorted.Add(operators[i]);
                             operators.RemoveAt(i);
@@ -94,11 +94,11 @@ namespace Calculator
                 }
                 else if (l.Operator == '(')
                 {
-                    modifier++;
+                    modifier+=2;
                 }
                 else // ')'
                 {
-                    modifier--;
+                    modifier-=2;
                 }
             }
 
@@ -114,12 +114,12 @@ namespace Calculator
         public static List<lexeme> lexemeFixer(List<lexeme> lex)
         {
             //  -4--2
-            for (int i = lex.Count - 1; i >= 0 ; i--)
+            for (int i = lex.Count - 1; i >= 0; i--)
             {
                 //solve if first token is operator
                 if (i == 0 && lex[i].Token == TokenType.Operator)
                 {
-                    if(lex[i].Operator == '-')// && lex[i+1].Token != TokenType.Operator 
+                    if (lex[i].Operator == '-')// && lex[i+1].Token != TokenType.Operator 
                     {
                         lex[i + 1].Value *= -1;
                         lex.RemoveAt(0);
@@ -129,15 +129,16 @@ namespace Calculator
                 {
                     if (lex[i].Token == TokenType.Operator) //if this is a '-' for example
                     {
-                        if (lex[i-1].Token == TokenType.Operator)//and previous token is also operator
+                        if (lex[i - 1].Token == TokenType.Operator)//and previous token is also operator
                         {
-                            if(lex[i].Operator == '-')
+                            if (lex[i].Operator == '-')
                             {
                                 lex[i + 1].Value *= -1;
                                 lex.RemoveAt(i);
-                                
+
                             }
-                            else if(lex[i].Operator == '+'){
+                            else if (lex[i].Operator == '+')
+                            {
                                 lex.RemoveAt(i);
                             }
                         }
@@ -148,6 +149,50 @@ namespace Calculator
             return lex;
         }
 
+        public static float recursiveCalculate(List<lexeme> lex)
+        {
+
+            if (lex.Count == 1)
+            {
+                return (float)lex[0].Value;
+            }
+            else
+            {
+                int n = 0;
+                for (int i = 0; i < lex.Count; i++)
+                {
+                    //Console.Write(lex[i].Value.ToString() + " ");
+
+                    if (lex[i].Token == TokenType.Operator)
+                    {
+                        //Console.Write(lex[i].Operator.ToString() + "\r\n");
+                        n = i;
+                        break;
+                    }
+                }
+
+                switch (lex[n].Operator)
+                {
+                    case '+':
+                        lex[n - 2].Value = lex[n - 2].Value + lex[n - 1].Value;
+                        break;
+                    case '-':
+                        lex[n - 2].Value = lex[n - 2].Value - lex[n - 1].Value;
+                        break;
+                    case '*':
+                        lex[n - 2].Value = lex[n - 2].Value * lex[n - 1].Value;
+                        break;
+                    case '/':
+                        lex[n - 2].Value = lex[n - 2].Value / lex[n - 1].Value;
+                        break;
+                    default:
+                        break;
+                }
+
+                lex.RemoveRange(n - 1, 2);
+                return recursiveCalculate(lex);
+            }
+        }
         static void Main(string[] args)
         {
             string line;
@@ -178,6 +223,15 @@ namespace Calculator
 
                 }
                 Console.Write("\r\n");
+
+
+
+                //calculate
+
+
+                float result = recursiveCalculate(lexemes);
+
+                Console.WriteLine(result.ToString("n2"));
             }
 
         }
