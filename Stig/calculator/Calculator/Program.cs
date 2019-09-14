@@ -111,13 +111,56 @@ namespace Calculator
             return sorted;
         }
 
+        public static List<lexeme> lexemeFixer(List<lexeme> lex)
+        {
+            //  -4--2
+            for (int i = lex.Count - 1; i >= 0 ; i--)
+            {
+                //solve if first token is operator
+                if (i == 0 && lex[i].Token == TokenType.Operator)
+                {
+                    if(lex[i].Operator == '-')// && lex[i+1].Token != TokenType.Operator 
+                    {
+                        lex[i + 1].Value *= -1;
+                        lex.RemoveAt(0);
+                    }
+                }
+                else
+                {
+                    if (lex[i].Token == TokenType.Operator) //if this is a '-' for example
+                    {
+                        if (lex[i-1].Token == TokenType.Operator)//and previous token is also operator
+                        {
+                            if(lex[i].Operator == '-')
+                            {
+                                lex[i + 1].Value *= -1;
+                                lex.RemoveAt(i);
+                                
+                            }
+                            else if(lex[i].Operator == '+'){
+                                lex.RemoveAt(i);
+                            }
+                        }
+                    }
+                }
+            }
+
+            return lex;
+        }
+
         static void Main(string[] args)
         {
-            string text = Console.ReadLine();
-            if (text != null)
+            string line;
+            while ((line = Console.ReadLine()) != null)
             {
                 //Find tokens in input string
-                List<lexeme> lexemes = lexicalAnalysis(text);
+                List<lexeme> lexemes = lexicalAnalysis(line);
+
+                //lexemes are at this point every valid input
+                //though problem is with expreessions like -4--2
+                //so we need a fixer for that.
+                lexemes = lexemeFixer(lexemes);
+
 
                 //Apply grammar to tokens
                 lexemes = syntaxAnalysis(lexemes);
