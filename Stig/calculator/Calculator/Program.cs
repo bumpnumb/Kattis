@@ -94,11 +94,11 @@ namespace Calculator
                 }
                 else if (l.Operator == '(')
                 {
-                    modifier+=2;
+                    modifier += 2;
                 }
                 else // ')'
                 {
-                    modifier-=2;
+                    modifier -= 2;
                 }
             }
 
@@ -131,15 +131,36 @@ namespace Calculator
                     {
                         if (lex[i - 1].Token == TokenType.Operator)//and previous token is also operator
                         {
-                            if (lex[i].Operator == '-')
+                            if (lex[i].Operator == '-' && lex[i+1].Token == TokenType.Operand)
                             {
                                 lex[i + 1].Value *= -1;
                                 lex.RemoveAt(i);
-
                             }
-                            else if (lex[i].Operator == '+')
+                            else if (lex[i].Operator == '+' && lex[i-1].Operator != ')')
                             {
                                 lex.RemoveAt(i);
+                            }
+                            else if (lex[i].Operator == '(')
+                            {
+                                if (lex[i - 1].Operator == '-')
+                                {
+                                    for (int j = i + 1; j < lex.Count; j++)
+                                    {
+                                        if (lex[j].Token == TokenType.Operator)
+                                        {
+                                            if (lex[j].Operator == ')')
+                                            {
+                                                break;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            lex[j].Value *= -1;
+                                        }
+                                    }
+                                    //lex.RemoveAt(i - 1);
+                                    lex[i - 1].Operator = '+';
+                                }
                             }
                         }
                     }
@@ -170,7 +191,7 @@ namespace Calculator
                         break;
                     }
                 }
-
+                //do math
                 switch (lex[n].Operator)
                 {
                     case '+':
@@ -193,11 +214,28 @@ namespace Calculator
                 return recursiveCalculate(lex);
             }
         }
+
+        public static void print(List<lexeme> lex)
+        {
+            foreach (lexeme l in lex)
+            {
+                if (l.Token == TokenType.Operand)
+                    Console.Write(l.Value + " ");
+                else
+                    Console.Write(l.Operator + " ");
+                //Console.Write(l.Operator + "(" + l.Value + ") ");
+                //use above line to see the magic behind why all this works
+
+            }
+            Console.Write("\r\n");
+        }
         static void Main(string[] args)
         {
             string line;
             while ((line = Console.ReadLine()) != null)
             {
+                if (line == "")
+                    break;
                 //Find tokens in input string
                 List<lexeme> lexemes = lexicalAnalysis(line);
 
@@ -212,28 +250,13 @@ namespace Calculator
 
 
                 //Print result
-                foreach (lexeme l in lexemes)
-                {
-                    if (l.Token == TokenType.Operand)
-                        Console.Write(l.Value + " ");
-                    else
-                        Console.Write(l.Operator + " ");
-                    //Console.Write(l.Operator + "(" + l.Value + ") ");
-                    //use above line to see the magic behind why all this works
-
-                }
-                Console.Write("\r\n");
-
-
-
-                //calculate
+                //print(lexemes);
 
 
                 float result = recursiveCalculate(lexemes);
 
-                Console.WriteLine(result.ToString("n2"));
+                Console.WriteLine(result.ToString("0.00"));
             }
-
         }
     }
 }
