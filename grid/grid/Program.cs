@@ -29,94 +29,65 @@ namespace grid
             Node best = queue[0];
             foreach (Node n in queue)
             {
-                if (n.Cost < best.Cost)
+                if (n.Cost > best.Cost)
                     best = n;
             }
             return best;
         }
-
-        public static bool IsGoal(Node node, int goalX, int goalY)
+        public static int Expander(Node[][] arr, int goalX, int goalY)
         {
-            if (node.X == goalX && node.Y == goalY)
-                return true;
-            return false;
-        }
-
-        public static void Print(Node[][] arr, int X, int Y, int cost)
-        {
-            Console.Clear();
-            for (int i = 0; i < arr.Length; i++)
+            List<Node> queue = new List<Node>();
+            queue.Add(arr[0][0]);
+            Node current;
+            while (queue.Count > 0)
             {
-                for (int j = 0; j < arr[0].Length; j++)
+                current = queue[queue.Count-1];
+                queue.RemoveAt(queue.Count - 1);
+
+                //Print(arr, current.X, current.Y, current.Cost);
+
+                if (current.X + current.Value <= arr[1].Length - 1)
                 {
-                    if (i == Y && j == X)
-                        Console.Write('[' + arr[i][j].Value.ToString() + ']');
-                    else
-                        Console.Write(' ' + arr[i][j].Value.ToString() + ' ');
+                    if (arr[current.Y][current.X + current.Value].Cost > current.Cost + 1)
+                    {
+                        arr[current.Y][current.X + current.Value].Cost = current.Cost + 1;
+                        queue.Add(arr[current.Y][current.X + current.Value]);
+                    }
                 }
 
-                Console.Write("\r\n");
-            }
-            Console.WriteLine(cost);
-        }
+                if (current.X - current.Value >= 0)
+                {
+                    if (arr[current.Y][current.X - current.Value].Cost > current.Cost + 1)
+                    {
+                        arr[current.Y][current.X - current.Value].Cost = current.Cost + 1;
+                        queue.Add(arr[current.Y][current.X - current.Value]);
+                    }
+                }
 
-        public static int Expander(Node[][] arr, List<Node> queue, int goalX, int goalY)
-        {
-            if (queue.Count == 0)
+                if (current.Y + current.Value <= arr.Length - 1)
+                {
+                    if (arr[current.Y + current.Value][current.X].Cost > current.Cost + 1)
+                    {
+                        arr[current.Y + current.Value][current.X].Cost = current.Cost + 1;
+                        queue.Add(arr[current.Y + current.Value][current.X]);
+                    }
+                }
+
+                if (current.Y - current.Value >= 0)
+                {
+                    if (arr[current.Y - current.Value][current.X].Cost > current.Cost + 1)
+                    {
+                        arr[current.Y - current.Value][current.X].Cost = current.Cost + 1;
+                        queue.Add(arr[current.Y - current.Value][current.X]);
+                    }
+                }
+
+            }
+
+            if (arr[goalY][goalX].Cost == 999999999)
                 return -1;
 
-            Node current = GetBestNode(queue, goalX, goalY);
-
-            //print(arr, current.X, current.Y, current.Cost);
-
-
-
-            queue.Remove(current);
-
-            if (IsGoal(current, goalX, goalY))
-                return current.Cost;
-
-            if (current.Value == 0)
-            {
-                current.Cost = -1;
-                return Expander(arr, queue, goalX, goalY);
-            }
-            if (current.X + current.Value <= arr[1].Length - 1)
-            {
-                if (arr[current.Y][current.X + current.Value].Cost > current.Cost + 1)
-                {
-                    arr[current.Y][current.X + current.Value].Cost = current.Cost + 1;
-                    queue.Add(arr[current.Y][current.X + current.Value]);
-                }
-            }
-
-            if (current.X - current.Value >= 0)
-            {
-                if (arr[current.Y][current.X - current.Value].Cost > current.Cost + 1)
-                {
-                    arr[current.Y][current.X - current.Value].Cost = current.Cost + 1;
-                    queue.Add(arr[current.Y][current.X - current.Value]);
-                }
-            }
-
-            if (current.Y + current.Value <= arr.Length - 1)
-            {
-                if (arr[current.Y + current.Value][current.X].Cost > current.Cost + 1)
-                {
-                    arr[current.Y + current.Value][current.X].Cost = current.Cost + 1;
-                    queue.Add(arr[current.Y + current.Value][current.X]);
-                }
-            }
-
-            if (current.Y - current.Value >= 0)
-            {
-                if (arr[current.Y - current.Value][current.X].Cost > current.Cost + 1)
-                {
-                    arr[current.Y - current.Value][current.X].Cost = current.Cost + 1;
-                    queue.Add(arr[current.Y - current.Value][current.X]);
-                }
-            }
-            return Expander(arr, queue, goalX, goalY);
+            return arr[goalY][goalX].Cost;
         }
 
 
@@ -141,7 +112,7 @@ namespace grid
             List<Node> first = new List<Node>();
             arr[0][0].Cost = 0;
             first.Add(arr[0][0]);
-            Console.WriteLine(Expander(arr, first, x - 1, y - 1));
+            Console.WriteLine(Expander(arr, x - 1, y - 1));
         }
     }
 }
