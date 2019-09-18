@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29306.81
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "combinationlock", "combinationlock\combinationlock.csproj", "{BC6D19F7-FA01-47BC-8050-9E317178F44C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BC6D19F7-FA01-47BC-8050-9E317178F44C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC6D19F7-FA01-47BC-8050-9E317178F44C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BC6D19F7-FA01-47BC-8050-9E317178F44C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BC6D19F7-FA01-47BC-8050-9E317178F44C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AD31A83A-5318-4C4F-BF38-F3BB6DF211D4}
+	EndGlobalSection
+EndGlobal
