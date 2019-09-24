@@ -27,15 +27,15 @@ namespace cetvrta
                 points.Add(p);
             }
 
-            point numX = points.GroupBy(p => p.x)
+            int numX = points.GroupBy(p => p.x)
                   .OrderByDescending(g => g.Count())
-                  .SelectMany(g => g).Last();
+                  .SelectMany(g => g).Last().x;
 
-            point numY = points.GroupBy(p => p.y)
+            int numY = points.GroupBy(p => p.y)
                   .OrderByDescending(g => g.Count())
-                  .SelectMany(g => g).Last();
+                  .SelectMany(g => g).Last().y;
 
-            Console.WriteLine("" + numX.x + " " + numY.y);
+            Console.WriteLine("" + numX + " " + numY);
 
         }
     }
