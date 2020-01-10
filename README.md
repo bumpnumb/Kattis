@@ -1,4 +1,4 @@
 # Kattis
-These are solutions to Kattis problems
+These are solutions to [Kattis](https://open.kattis.com/ "Kattis homepage") problems
 
-Add solutions in a folder named after you, in case we solve the same task
+All filenames are named after the Problem ID
